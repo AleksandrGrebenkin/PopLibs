@@ -11,6 +11,10 @@ import com.github.aleksandrgrebenkin.poplibs.mvp.presenter.UserPresenter
 import com.github.aleksandrgrebenkin.poplibs.mvp.view.UserView
 import com.github.aleksandrgrebenkin.poplibs.ui.App
 import com.github.aleksandrgrebenkin.poplibs.ui.BackButtonListener
+import com.github.aleksandrgrebenkin.poplibs.ui.entity.GithubUserData
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_main.view.*
+import moxy.MvpAppCompatActivity
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 
@@ -42,7 +46,18 @@ class UserFragment : MvpAppCompatFragment(), UserView, BackButtonListener {
     ): View? {
         _binding = FragmentUserBinding.inflate(inflater, container, false)
         val view = binding.root
+
         return view
+    }
+
+    override fun onStart() {
+        super.onStart()
+        (requireActivity() as MvpAppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        (requireActivity() as MvpAppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
     }
 
     override fun onDestroyView() {
@@ -50,7 +65,7 @@ class UserFragment : MvpAppCompatFragment(), UserView, BackButtonListener {
         _binding = null
     }
 
-    override fun showUser(user: GithubUser) {
+    override fun showUser(user: GithubUserData) {
         binding.tvUserLogin.text = user.login
     }
 
@@ -58,6 +73,6 @@ class UserFragment : MvpAppCompatFragment(), UserView, BackButtonListener {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
         android.R.id.home -> backPressed()
-        else -> backPressed()
+        else -> super.onOptionsItemSelected(item)
     }
 }

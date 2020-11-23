@@ -1,6 +1,8 @@
 package com.github.aleksandrgrebenkin.poplibs.ui.activity
 
 import android.os.Bundle
+import android.view.MenuItem
+import androidx.appcompat.widget.Toolbar
 import com.github.aleksandrgrebenkin.poplibs.databinding.ActivityMainBinding
 import com.github.aleksandrgrebenkin.poplibs.mvp.model.repo.GithubUserRepo
 import com.github.aleksandrgrebenkin.poplibs.mvp.presenter.MainPresenter
@@ -32,6 +34,8 @@ class MainActivity : MvpAppCompatActivity(), MainView {
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
+
+
     }
 
     override fun onResumeFragments() {
@@ -42,6 +46,14 @@ class MainActivity : MvpAppCompatActivity(), MainView {
     override fun onPause() {
         super.onPause()
         navigatorHolder.removeNavigator()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
+        android.R.id.home -> {
+            onBackPressed()
+            true
+        }
+        else -> super.onOptionsItemSelected(item)
     }
 
     override fun onBackPressed() {
