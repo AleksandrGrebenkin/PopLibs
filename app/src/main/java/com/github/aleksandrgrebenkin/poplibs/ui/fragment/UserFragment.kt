@@ -1,19 +1,16 @@
 package com.github.aleksandrgrebenkin.poplibs.ui.fragment
 
 import android.os.Bundle
-import android.view.*
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
+import android.view.LayoutInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import com.github.aleksandrgrebenkin.poplibs.databinding.FragmentUserBinding
-import com.github.aleksandrgrebenkin.poplibs.databinding.FragmentUsersBinding
 import com.github.aleksandrgrebenkin.poplibs.mvp.model.entity.GithubUser
 import com.github.aleksandrgrebenkin.poplibs.mvp.presenter.UserPresenter
 import com.github.aleksandrgrebenkin.poplibs.mvp.view.UserView
 import com.github.aleksandrgrebenkin.poplibs.ui.App
 import com.github.aleksandrgrebenkin.poplibs.ui.BackButtonListener
-import com.github.aleksandrgrebenkin.poplibs.ui.entity.GithubUserData
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_main.view.*
 import moxy.MvpAppCompatActivity
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
@@ -65,8 +62,8 @@ class UserFragment : MvpAppCompatFragment(), UserView, BackButtonListener {
         _binding = null
     }
 
-    override fun showUser(user: GithubUserData) {
-        binding.tvUserLogin.text = user.login
+    override fun showLogin(login: String) {
+        binding.tvUserLogin.text = login
     }
 
     override fun backPressed() = presenter.backPressed()
