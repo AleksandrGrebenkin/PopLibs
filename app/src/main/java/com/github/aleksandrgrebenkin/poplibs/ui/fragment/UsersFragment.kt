@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.aleksandrgrebenkin.poplibs.databinding.FragmentUsersBinding
 import com.github.aleksandrgrebenkin.poplibs.mvp.model.repo.GithubUserRepo
@@ -12,6 +13,7 @@ import com.github.aleksandrgrebenkin.poplibs.mvp.view.UsersView
 import com.github.aleksandrgrebenkin.poplibs.ui.App
 import com.github.aleksandrgrebenkin.poplibs.ui.BackButtonListener
 import com.github.aleksandrgrebenkin.poplibs.ui.adapter.UsersRVAdapter
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 
@@ -24,7 +26,13 @@ class UsersFragment : MvpAppCompatFragment(), UsersView, BackButtonListener {
     private val binding
         get() = _binding!!
 
-    private val presenter by moxyPresenter { UsersPresenter(GithubUserRepo(), App.instance.router) }
+    private val presenter by moxyPresenter {
+        UsersPresenter(
+            GithubUserRepo(),
+            App.instance.router,
+            AndroidSchedulers.mainThread()
+        )
+    }
     private var adapter: UsersRVAdapter? = null
 
     override fun onCreateView(
@@ -35,6 +43,10 @@ class UsersFragment : MvpAppCompatFragment(), UsersView, BackButtonListener {
         _binding = FragmentUsersBinding.inflate(inflater, container, false)
         val view = binding.root
         return view
+    }
+
+    override fun onStart() {
+        super.onStart()
     }
 
     override fun onDestroyView() {
@@ -50,6 +62,10 @@ class UsersFragment : MvpAppCompatFragment(), UsersView, BackButtonListener {
 
     override fun updateList() {
         adapter?.notifyDataSetChanged()
+    }
+
+    override fun showError(message: Throwable) {
+        Toast.makeText(context, message.message, Toast.LENGTH_SHORT).show()
     }
 
     override fun backPressed() = presenter.backPressed()

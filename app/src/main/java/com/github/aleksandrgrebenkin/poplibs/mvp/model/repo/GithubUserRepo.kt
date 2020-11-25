@@ -1,6 +1,7 @@
 package com.github.aleksandrgrebenkin.poplibs.mvp.model.repo
 
 import com.github.aleksandrgrebenkin.poplibs.mvp.model.entity.GithubUser
+import io.reactivex.rxjava3.core.Observable
 
 class GithubUserRepo {
     private val repositories = listOf(
@@ -11,7 +12,7 @@ class GithubUserRepo {
         GithubUser("login5")
     )
 
-    fun getUsers(): List<GithubUser> {
-        return repositories
+    fun loadUser(): Observable<List<GithubUser>> = Observable.fromCallable {
+        return@fromCallable repositories
     }
 }
