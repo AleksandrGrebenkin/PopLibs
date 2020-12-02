@@ -7,4 +7,5 @@ import moxy.viewstate.strategy.alias.AddToEndSingle
 interface UsersView : MvpView {
     fun init()
     fun updateList()
+    fun showError(message: Throwable)
 }
