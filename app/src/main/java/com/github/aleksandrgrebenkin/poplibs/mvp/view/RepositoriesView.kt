@@ -4,6 +4,8 @@ import moxy.MvpView
 import moxy.viewstate.strategy.alias.AddToEndSingle
 
 @AddToEndSingle
-interface UserView : MvpView {
-    fun showLogin(login: String)
+interface RepositoriesView : MvpView {
+    fun init()
+    fun updateList()
+    fun showError(message: Throwable)
 }

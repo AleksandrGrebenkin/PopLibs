@@ -2,11 +2,8 @@ package com.github.aleksandrgrebenkin.poplibs.ui.activity
 
 import android.os.Bundle
 import android.view.MenuItem
-import androidx.appcompat.widget.Toolbar
 import com.github.aleksandrgrebenkin.poplibs.databinding.ActivityMainBinding
-import com.github.aleksandrgrebenkin.poplibs.mvp.model.repo.GithubUserRepo
 import com.github.aleksandrgrebenkin.poplibs.mvp.presenter.MainPresenter
-import com.github.aleksandrgrebenkin.poplibs.mvp.presenter.UsersPresenter
 import com.github.aleksandrgrebenkin.poplibs.mvp.view.MainView
 import com.github.aleksandrgrebenkin.poplibs.ui.App
 import com.github.aleksandrgrebenkin.poplibs.ui.BackButtonListener
