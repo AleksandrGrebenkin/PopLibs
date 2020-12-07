@@ -1,18 +1,21 @@
 package com.github.aleksandrgrebenkin.poplibs.ui.fragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.aleksandrgrebenkin.poplibs.databinding.FragmentUsersBinding
-import com.github.aleksandrgrebenkin.poplibs.mvp.model.repo.GithubUserRepo
+import com.github.aleksandrgrebenkin.poplibs.mvp.model.api.ApiHolder
+import com.github.aleksandrgrebenkin.poplibs.mvp.model.repo.RetrofitGithubUsersRepo
 import com.github.aleksandrgrebenkin.poplibs.mvp.presenter.UsersPresenter
 import com.github.aleksandrgrebenkin.poplibs.mvp.view.UsersView
 import com.github.aleksandrgrebenkin.poplibs.ui.App
 import com.github.aleksandrgrebenkin.poplibs.ui.BackButtonListener
 import com.github.aleksandrgrebenkin.poplibs.ui.adapter.UsersRVAdapter
+import com.github.aleksandrgrebenkin.poplibs.ui.image.GlideImageLoader
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
@@ -28,7 +31,7 @@ class UsersFragment : MvpAppCompatFragment(), UsersView, BackButtonListener {
 
     private val presenter by moxyPresenter {
         UsersPresenter(
-            GithubUserRepo(),
+            RetrofitGithubUsersRepo(ApiHolder.api),
             App.instance.router,
             AndroidSchedulers.mainThread()
         )
@@ -45,10 +48,6 @@ class UsersFragment : MvpAppCompatFragment(), UsersView, BackButtonListener {
         return view
     }
 
-    override fun onStart() {
-        super.onStart()
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
@@ -56,7 +55,7 @@ class UsersFragment : MvpAppCompatFragment(), UsersView, BackButtonListener {
 
     override fun init() {
         binding.rvUsers.layoutManager = LinearLayoutManager(context)
-        adapter = UsersRVAdapter(presenter.usersListPresenter)
+        adapter = UsersRVAdapter(presenter.usersListPresenter, GlideImageLoader())
         binding.rvUsers.adapter = adapter
     }
 
@@ -66,6 +65,7 @@ class UsersFragment : MvpAppCompatFragment(), UsersView, BackButtonListener {
 
     override fun showError(message: Throwable) {
         Toast.makeText(context, message.message, Toast.LENGTH_SHORT).show()
+        Log.e("MY_ERROR", message.message?:message.stackTraceToString())
     }
 
     override fun backPressed() = presenter.backPressed()
