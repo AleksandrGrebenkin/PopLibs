@@ -1,6 +1,5 @@
 package com.github.aleksandrgrebenkin.poplibs.navigation
 
-import androidx.fragment.app.Fragment
 import com.github.aleksandrgrebenkin.poplibs.mvp.model.entity.GithubRepository
 import com.github.aleksandrgrebenkin.poplibs.mvp.model.entity.GithubUser
 import com.github.aleksandrgrebenkin.poplibs.ui.fragment.RepositoriesFragment

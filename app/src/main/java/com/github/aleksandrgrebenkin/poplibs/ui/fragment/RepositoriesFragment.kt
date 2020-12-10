@@ -11,12 +11,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.aleksandrgrebenkin.poplibs.databinding.FragmentRepositoriesBinding
 import com.github.aleksandrgrebenkin.poplibs.mvp.model.api.ApiHolder
 import com.github.aleksandrgrebenkin.poplibs.mvp.model.entity.GithubUser
+import com.github.aleksandrgrebenkin.poplibs.mvp.model.entity.room.cache.RoomRepositoriesCache
+import com.github.aleksandrgrebenkin.poplibs.mvp.model.entity.room.database.Database
+import com.github.aleksandrgrebenkin.poplibs.mvp.model.repo.RetrofitGithubRepositoriesRepo
 import com.github.aleksandrgrebenkin.poplibs.mvp.model.repo.RetrofitGithubUsersRepo
 import com.github.aleksandrgrebenkin.poplibs.mvp.presenter.RepositoriesPresenter
 import com.github.aleksandrgrebenkin.poplibs.mvp.view.RepositoriesView
 import com.github.aleksandrgrebenkin.poplibs.ui.App
 import com.github.aleksandrgrebenkin.poplibs.ui.BackButtonListener
 import com.github.aleksandrgrebenkin.poplibs.ui.adapter.RepositoriesRVAdapter
+import com.github.aleksandrgrebenkin.poplibs.ui.network.AndroidNetworkStatus
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import moxy.MvpAppCompatActivity
 import moxy.MvpAppCompatFragment
@@ -42,7 +46,11 @@ class RepositoriesFragment : MvpAppCompatFragment(), RepositoriesView, BackButto
         val user: GithubUser =
             arguments?.getParcelable<GithubUser>(UserFragment.USER_KEY) as GithubUser
         RepositoriesPresenter(
-            RetrofitGithubUsersRepo(ApiHolder.api),
+            RetrofitGithubRepositoriesRepo(
+                ApiHolder.api,
+                AndroidNetworkStatus(requireContext()),
+                RoomRepositoriesCache()
+            ),
             user,
             App.instance.router,
             AndroidSchedulers.mainThread()
@@ -67,7 +75,9 @@ class RepositoriesFragment : MvpAppCompatFragment(), RepositoriesView, BackButto
 
     override fun onDestroy() {
         super.onDestroy()
-        (requireActivity() as MvpAppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
+        (requireActivity() as MvpAppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(
+            false
+        )
     }
 
     override fun onDestroyView() {
@@ -87,7 +97,7 @@ class RepositoriesFragment : MvpAppCompatFragment(), RepositoriesView, BackButto
 
     override fun showError(message: Throwable) {
         Toast.makeText(context, message.message, Toast.LENGTH_SHORT).show()
-        Log.e("MY_ERROR", message.message?:message.stackTraceToString())
+        Log.e("MY_ERROR", message.message ?: message.stackTraceToString())
     }
 
     override fun backPressed() = presenter.backPressed()

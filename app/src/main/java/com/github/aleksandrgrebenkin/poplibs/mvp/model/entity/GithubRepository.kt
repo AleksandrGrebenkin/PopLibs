@@ -6,6 +6,8 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 class GithubRepository(
-    @Expose val name: String,
-    @Expose val forksCount: Int
+    @Expose val id: String? = null,
+    @Expose val name: String? = null,
+    @Expose val forksCount: Int? = null,
+    @Expose val fullName: String? = null
 ) : Parcelable

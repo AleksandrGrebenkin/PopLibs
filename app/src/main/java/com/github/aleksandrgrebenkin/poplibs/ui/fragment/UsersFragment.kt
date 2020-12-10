@@ -9,6 +9,8 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.aleksandrgrebenkin.poplibs.databinding.FragmentUsersBinding
 import com.github.aleksandrgrebenkin.poplibs.mvp.model.api.ApiHolder
+import com.github.aleksandrgrebenkin.poplibs.mvp.model.entity.room.cache.RoomUsersCache
+import com.github.aleksandrgrebenkin.poplibs.mvp.model.entity.room.database.Database
 import com.github.aleksandrgrebenkin.poplibs.mvp.model.repo.RetrofitGithubUsersRepo
 import com.github.aleksandrgrebenkin.poplibs.mvp.presenter.UsersPresenter
 import com.github.aleksandrgrebenkin.poplibs.mvp.view.UsersView
@@ -16,6 +18,7 @@ import com.github.aleksandrgrebenkin.poplibs.ui.App
 import com.github.aleksandrgrebenkin.poplibs.ui.BackButtonListener
 import com.github.aleksandrgrebenkin.poplibs.ui.adapter.UsersRVAdapter
 import com.github.aleksandrgrebenkin.poplibs.ui.image.GlideImageLoader
+import com.github.aleksandrgrebenkin.poplibs.ui.network.AndroidNetworkStatus
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
@@ -31,7 +34,11 @@ class UsersFragment : MvpAppCompatFragment(), UsersView, BackButtonListener {
 
     private val presenter by moxyPresenter {
         UsersPresenter(
-            RetrofitGithubUsersRepo(ApiHolder.api),
+            RetrofitGithubUsersRepo(
+                ApiHolder.api,
+                AndroidNetworkStatus(requireContext()),
+                RoomUsersCache()
+            ),
             App.instance.router,
             AndroidSchedulers.mainThread()
         )
@@ -65,7 +72,7 @@ class UsersFragment : MvpAppCompatFragment(), UsersView, BackButtonListener {
 
     override fun showError(message: Throwable) {
         Toast.makeText(context, message.message, Toast.LENGTH_SHORT).show()
-        Log.e("MY_ERROR", message.message?:message.stackTraceToString())
+        Log.e("MY_ERROR", message.message ?: message.stackTraceToString())
     }
 
     override fun backPressed() = presenter.backPressed()
