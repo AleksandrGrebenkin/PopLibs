@@ -2,6 +2,7 @@ package com.github.aleksandrgrebenkin.poplibs.mvp.presenter
 
 import com.github.aleksandrgrebenkin.poplibs.mvp.model.entity.GithubRepository
 import com.github.aleksandrgrebenkin.poplibs.mvp.model.entity.GithubUser
+import com.github.aleksandrgrebenkin.poplibs.mvp.model.repo.IGithubRepositoriesRepo
 import com.github.aleksandrgrebenkin.poplibs.mvp.model.repo.IGithubUsersRepo
 import com.github.aleksandrgrebenkin.poplibs.mvp.presenter.list.IRepositoryListPresenter
 import com.github.aleksandrgrebenkin.poplibs.mvp.view.RepositoriesView
@@ -13,7 +14,7 @@ import moxy.MvpPresenter
 import ru.terrakok.cicerone.Router
 
 class RepositoriesPresenter(
-    private val usersRepo: IGithubUsersRepo,
+    private val usersRepo: IGithubRepositoriesRepo,
     private val user: GithubUser,
     private val router: Router,
     private val uiScheduler: Scheduler
@@ -26,7 +27,7 @@ class RepositoriesPresenter(
 
         override fun bindView(view: RepositoryItemView) {
             val repository = repositories[view.pos]
-            view.setName(repository.name)
+            repository.name?.let { view.setName(it) }
         }
 
         override fun getCount() = repositories.size
@@ -46,7 +47,7 @@ class RepositoriesPresenter(
     }
 
     private fun loadData() {
-        loadRepositoriesDisposable = usersRepo.loadUserRepos(user.reposUrl)
+        loadRepositoriesDisposable = usersRepo.loadUserRepos(user)
             .observeOn(uiScheduler)
             .subscribe(
                 { repositories ->
