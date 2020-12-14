@@ -30,9 +30,6 @@ class UsersFragment : MvpAppCompatFragment(), UsersView, BackButtonListener {
         fun newInstance() = UsersFragment()
     }
 
-    @Inject
-    lateinit var imageLoader: IImageLoader<ImageView>
-
     private var _binding: FragmentUsersBinding? = null
     private val binding
         get() = _binding!!
@@ -51,7 +48,6 @@ class UsersFragment : MvpAppCompatFragment(), UsersView, BackButtonListener {
     ): View? {
         _binding = FragmentUsersBinding.inflate(inflater, container, false)
         val view = binding.root
-        App.instance.appComponent.inject(this)
         return view
     }
 
@@ -62,7 +58,7 @@ class UsersFragment : MvpAppCompatFragment(), UsersView, BackButtonListener {
 
     override fun init() {
         binding.rvUsers.layoutManager = LinearLayoutManager(context)
-        adapter = UsersRVAdapter(presenter.usersListPresenter, imageLoader)
+        adapter = UsersRVAdapter(presenter.usersListPresenter)
         binding.rvUsers.adapter = adapter
     }
 

@@ -3,6 +3,7 @@ package com.github.aleksandrgrebenkin.poplibs.di
 import com.github.aleksandrgrebenkin.poplibs.di.modules.*
 import com.github.aleksandrgrebenkin.poplibs.mvp.presenter.*
 import com.github.aleksandrgrebenkin.poplibs.ui.activity.MainActivity
+import com.github.aleksandrgrebenkin.poplibs.ui.adapter.UsersRVAdapter
 import com.github.aleksandrgrebenkin.poplibs.ui.fragment.UsersFragment
 import dagger.Component
 import javax.inject.Singleton
@@ -20,7 +21,7 @@ import javax.inject.Singleton
 )
 interface AppComponent {
     fun inject(mainActivity: MainActivity)
-    fun inject(usersFragment: UsersFragment)
+    fun inject(viewHolder: UsersRVAdapter.ViewHolder)
 
     fun inject(mainPresenter: MainPresenter)
     fun inject(usersPresenter: UsersPresenter)
