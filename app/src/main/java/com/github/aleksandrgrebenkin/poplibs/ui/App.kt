@@ -1,6 +1,9 @@
 package com.github.aleksandrgrebenkin.poplibs.ui
 
 import android.app.Application
+import com.github.aleksandrgrebenkin.poplibs.di.AppComponent
+import com.github.aleksandrgrebenkin.poplibs.di.DaggerAppComponent
+import com.github.aleksandrgrebenkin.poplibs.di.modules.AppModule
 import com.github.aleksandrgrebenkin.poplibs.mvp.model.entity.room.database.Database
 import ru.terrakok.cicerone.Cicerone
 import ru.terrakok.cicerone.Router
@@ -10,19 +13,14 @@ class App : Application() {
         lateinit var instance: App
     }
 
-    private val cicerone: Cicerone<Router> by lazy {
-        Cicerone.create()
-    }
+    lateinit var appComponent: AppComponent
 
     override fun onCreate() {
         super.onCreate()
         instance = this
-        Database.create(this)
+
+        appComponent = DaggerAppComponent.builder()
+            .appModule(AppModule(this))
+            .build()
     }
-
-    val navigatorHolder
-        get() = cicerone.navigatorHolder
-
-    val router
-        get() = cicerone.router
 }

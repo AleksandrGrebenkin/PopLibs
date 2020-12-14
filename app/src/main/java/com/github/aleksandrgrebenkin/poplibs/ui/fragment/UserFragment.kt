@@ -33,7 +33,9 @@ class UserFragment : MvpAppCompatFragment(), UserView, BackButtonListener {
 
     private val presenter by moxyPresenter {
         val user: GithubUser = arguments?.getParcelable<GithubUser>(USER_KEY) as GithubUser
-        UserPresenter(user, App.instance.router)
+        UserPresenter(user).apply {
+            App.instance.appComponent.inject(this)
+        }
     }
 
     override fun onCreateView(
@@ -53,7 +55,9 @@ class UserFragment : MvpAppCompatFragment(), UserView, BackButtonListener {
 
     override fun onDestroy() {
         super.onDestroy()
-        (requireActivity() as MvpAppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
+        (requireActivity() as MvpAppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(
+            false
+        )
     }
 
     override fun onDestroyView() {

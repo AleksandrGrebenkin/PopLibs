@@ -9,8 +9,7 @@ import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import java.lang.RuntimeException
 
-class RoomRepositoriesCache : IRepositoriesCache {
-    private val db = Database.getInstance()
+class RoomRepositoriesCache(val db: Database) : IRepositoriesCache {
     override fun putRepositories(user: GithubUser, repositories: List<GithubRepository>) =
         Completable.fromCallable {
             val roomUser = user.login.let {

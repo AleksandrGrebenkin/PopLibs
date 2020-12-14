@@ -5,12 +5,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.aleksandrgrebenkin.poplibs.databinding.FragmentUsersBinding
-import com.github.aleksandrgrebenkin.poplibs.mvp.model.api.ApiHolder
 import com.github.aleksandrgrebenkin.poplibs.mvp.model.entity.room.cache.RoomUsersCache
 import com.github.aleksandrgrebenkin.poplibs.mvp.model.entity.room.database.Database
+import com.github.aleksandrgrebenkin.poplibs.mvp.model.image.IImageLoader
 import com.github.aleksandrgrebenkin.poplibs.mvp.model.repo.RetrofitGithubUsersRepo
 import com.github.aleksandrgrebenkin.poplibs.mvp.presenter.UsersPresenter
 import com.github.aleksandrgrebenkin.poplibs.mvp.view.UsersView
@@ -22,6 +23,7 @@ import com.github.aleksandrgrebenkin.poplibs.ui.network.AndroidNetworkStatus
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
+import javax.inject.Inject
 
 class UsersFragment : MvpAppCompatFragment(), UsersView, BackButtonListener {
     companion object {
@@ -33,15 +35,9 @@ class UsersFragment : MvpAppCompatFragment(), UsersView, BackButtonListener {
         get() = _binding!!
 
     private val presenter by moxyPresenter {
-        UsersPresenter(
-            RetrofitGithubUsersRepo(
-                ApiHolder.api,
-                AndroidNetworkStatus(requireContext()),
-                RoomUsersCache()
-            ),
-            App.instance.router,
-            AndroidSchedulers.mainThread()
-        )
+        UsersPresenter().apply {
+            App.instance.appComponent.inject(this)
+        }
     }
     private var adapter: UsersRVAdapter? = null
 
@@ -62,7 +58,7 @@ class UsersFragment : MvpAppCompatFragment(), UsersView, BackButtonListener {
 
     override fun init() {
         binding.rvUsers.layoutManager = LinearLayoutManager(context)
-        adapter = UsersRVAdapter(presenter.usersListPresenter, GlideImageLoader())
+        adapter = UsersRVAdapter(presenter.usersListPresenter)
         binding.rvUsers.adapter = adapter
     }
 

@@ -8,16 +8,20 @@ import com.github.aleksandrgrebenkin.poplibs.databinding.ItemUserBinding
 import com.github.aleksandrgrebenkin.poplibs.mvp.model.image.IImageLoader
 import com.github.aleksandrgrebenkin.poplibs.mvp.presenter.list.IUserListPresenter
 import com.github.aleksandrgrebenkin.poplibs.mvp.view.list.UserItemView
+import com.github.aleksandrgrebenkin.poplibs.ui.App
 import kotlinx.android.extensions.LayoutContainer
+import javax.inject.Inject
 
 class UsersRVAdapter(
-    val presenter: IUserListPresenter, val imageLoader: IImageLoader<ImageView>
+    val presenter: IUserListPresenter
 ) : RecyclerView.Adapter<UsersRVAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val itemUserBinding = ItemUserBinding.inflate(layoutInflater, parent, false)
-        return ViewHolder(itemUserBinding)
+        val viewHolder = ViewHolder(itemUserBinding)
+        App.instance.appComponent.inject(viewHolder)
+        return viewHolder
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -32,6 +36,9 @@ class UsersRVAdapter(
 
     inner class ViewHolder(private val binding: ItemUserBinding) :
         RecyclerView.ViewHolder(binding.root), LayoutContainer, UserItemView {
+
+        @Inject
+        lateinit var imageLoader: IImageLoader<ImageView>
 
         override val containerView = binding.root
         override var pos = -1

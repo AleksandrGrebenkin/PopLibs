@@ -7,8 +7,7 @@ import com.github.aleksandrgrebenkin.poplibs.mvp.model.entity.room.database.Data
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 
-class RoomUsersCache : IUsersCache {
-    private val db = Database.getInstance()
+class RoomUsersCache(val db: Database) : IUsersCache {
     override fun putUsers(users: List<GithubUser>) = Completable.fromCallable {
         val roomUsers = users.map { user ->
             RoomGithubUser(
