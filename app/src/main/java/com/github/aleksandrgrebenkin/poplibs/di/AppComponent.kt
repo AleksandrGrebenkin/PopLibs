@@ -21,7 +21,7 @@ import javax.inject.Singleton
 )
 interface AppComponent {
     fun inject(mainActivity: MainActivity)
-    fun inject(viewHolder: UsersRVAdapter.ViewHolder)
+    fun inject(adapter: UsersRVAdapter)
 
     fun inject(mainPresenter: MainPresenter)
     fun inject(usersPresenter: UsersPresenter)
