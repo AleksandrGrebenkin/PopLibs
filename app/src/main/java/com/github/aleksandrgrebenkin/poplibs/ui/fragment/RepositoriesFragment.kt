@@ -9,12 +9,10 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.aleksandrgrebenkin.poplibs.databinding.FragmentRepositoriesBinding
-import com.github.aleksandrgrebenkin.poplibs.mvp.model.api.ApiHolder
 import com.github.aleksandrgrebenkin.poplibs.mvp.model.entity.GithubUser
 import com.github.aleksandrgrebenkin.poplibs.mvp.model.entity.room.cache.RoomRepositoriesCache
 import com.github.aleksandrgrebenkin.poplibs.mvp.model.entity.room.database.Database
 import com.github.aleksandrgrebenkin.poplibs.mvp.model.repo.RetrofitGithubRepositoriesRepo
-import com.github.aleksandrgrebenkin.poplibs.mvp.model.repo.RetrofitGithubUsersRepo
 import com.github.aleksandrgrebenkin.poplibs.mvp.presenter.RepositoriesPresenter
 import com.github.aleksandrgrebenkin.poplibs.mvp.view.RepositoriesView
 import com.github.aleksandrgrebenkin.poplibs.ui.App
@@ -45,16 +43,9 @@ class RepositoriesFragment : MvpAppCompatFragment(), RepositoriesView, BackButto
     private val presenter by moxyPresenter {
         val user: GithubUser =
             arguments?.getParcelable<GithubUser>(UserFragment.USER_KEY) as GithubUser
-        RepositoriesPresenter(
-            RetrofitGithubRepositoriesRepo(
-                ApiHolder.api,
-                AndroidNetworkStatus(requireContext()),
-                RoomRepositoriesCache()
-            ),
-            user,
-            App.instance.router,
-            AndroidSchedulers.mainThread()
-        )
+        RepositoriesPresenter(user).apply {
+            App.instance.appComponent.inject(this)
+        }
     }
     private var adapter: RepositoriesRVAdapter? = null
 

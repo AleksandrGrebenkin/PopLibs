@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.aleksandrgrebenkin.poplibs.databinding.FragmentUsersBinding
-import com.github.aleksandrgrebenkin.poplibs.mvp.model.api.ApiHolder
 import com.github.aleksandrgrebenkin.poplibs.mvp.model.entity.room.cache.RoomUsersCache
 import com.github.aleksandrgrebenkin.poplibs.mvp.model.entity.room.database.Database
 import com.github.aleksandrgrebenkin.poplibs.mvp.model.repo.RetrofitGithubUsersRepo
@@ -33,15 +32,9 @@ class UsersFragment : MvpAppCompatFragment(), UsersView, BackButtonListener {
         get() = _binding!!
 
     private val presenter by moxyPresenter {
-        UsersPresenter(
-            RetrofitGithubUsersRepo(
-                ApiHolder.api,
-                AndroidNetworkStatus(requireContext()),
-                RoomUsersCache()
-            ),
-            App.instance.router,
-            AndroidSchedulers.mainThread()
-        )
+        UsersPresenter().apply {
+            App.instance.appComponent.inject(this)
+        }
     }
     private var adapter: UsersRVAdapter? = null
 

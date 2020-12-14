@@ -12,13 +12,16 @@ import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.disposables.Disposable
 import moxy.MvpPresenter
 import ru.terrakok.cicerone.Router
+import javax.inject.Inject
 
-class RepositoriesPresenter(
-    private val usersRepo: IGithubRepositoriesRepo,
-    private val user: GithubUser,
-    private val router: Router,
-    private val uiScheduler: Scheduler
-) : MvpPresenter<RepositoriesView>() {
+class RepositoriesPresenter(private val user: GithubUser) : MvpPresenter<RepositoriesView>() {
+
+    @Inject
+    lateinit var usersRepo: IGithubRepositoriesRepo
+    @Inject
+    lateinit var router: Router
+    @Inject
+    lateinit var uiScheduler: Scheduler
 
     class RepositoriesListPresenter : IRepositoryListPresenter {
         val repositories = mutableListOf<GithubRepository>()

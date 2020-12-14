@@ -5,10 +5,14 @@ import com.github.aleksandrgrebenkin.poplibs.mvp.view.UserView
 import com.github.aleksandrgrebenkin.poplibs.ui.BackButtonListener
 import moxy.MvpPresenter
 import ru.terrakok.cicerone.Router
+import javax.inject.Inject
 
-class UserPresenter(private val user: GithubUser, private val router: Router) :
+class UserPresenter(val user: GithubUser) :
     MvpPresenter<UserView>(),
     BackButtonListener {
+
+    @Inject
+    lateinit var router: Router
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
